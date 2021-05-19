@@ -1,4 +1,6 @@
 import view
+import numpy
+import copy
 
 def start(configuration):
     try:
@@ -18,6 +20,8 @@ def start(configuration):
                 file_text.split('\n')
             )
         )
+
+        numpyValues = copy.deepcopy(values)
     except:
         view.error('file parsing error')
 
@@ -58,7 +62,15 @@ def start(configuration):
             notX = sum(list(map(lambda x, y: x * y, cutValues, cutResults)))
 
             result[i] = (y - notX) / x
-
-        view.result(result)
     except:
         view.error('no solutions')
+
+    # Numpy solve
+    x = list(map(lambda a: a[ : -1], numpyValues))
+    y = list(map(lambda b: b[-1], numpyValues))
+
+    numpyResult = numpy.linalg.solve(x, y).tolist()
+
+    view.result(result)
+    view.result(numpyResult, 'numpy result')
+    view.comparison(result, numpyResult)
